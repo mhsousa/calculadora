@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<meta charset= utf-8>
+<html>
+<div class="topnav" style="position:relative;top:-7px;left:-10px;width:103%;height:54px;">
+  <a class="active" href="https://dataimesc.imesc.ma.gov.br/">DataImesc</a>
+  <a href="https://dataimesc.github.io/inicio/">Início</a>
+  <a href="https://dataimesc.github.io/calculadora/">Calculadora de Inflação</a>
+  <a href="https://dataimesc.github.io/conversor_de_moedas/">Conversor de Moedas</a>
+  <a href="https://dataimesc.github.io/gerador-de-graficos/">Gerador de Gráficos</a>
+  <a href="https://dataimesc.github.io/bacenInterestRate-main/">Indicadores BACEN</a>
+
+</div>
+<head>
+
+    <title>IMESC | Calculadora da Inflação Maranhense</title>
+
+</head>
+
+<body>
+    <div class="container">
+        <img src="logo2.png" id="logo" onclick="location.href='https://dataimesc.imesc.ma.gov.br/';" width="480" height="75" style="position:relative;top:-20px;left:-30px">
+
+        <h1>Calculadora da Inflação Ludovicense</h1>
+        
+        <label for="valor">Digite o valor em reais:</label>
+        <input type="text" id="valor" oninput="formatCurrency(this)" placeholder="R$ 0.00">
+        <label for="data" class="input-label">Selecione um mês e ano:</label>
+        <div>
+        <label for="data" style="font-size: smaller;">Início</label>
+        <input type="month" id="data" name="data" class="input-date">
+        </div>
+        <div id="second">        
+        <label for="data2"style="font-size: smaller;">Fim</label>
+        <input type="month" id="data2" name="data2" class="input-date">
+        </div>
+        <button onclick="calcular()" id="'button_1">Calcular</button>
+        <div class="result" id="resultado"></div>
+        <h6>*Atualizado com dados de 2020-01 à 2024-03.</h6>
+    </div>
+
+</body>
+</html>
+<script>
+        
+    var inflatio = [
+   {'2020-01':0.9981},
+{'2020-02':1.0018},
+{'2020-03':1.0037},
+{'2020-04':0.9956},
+{'2020-05':0.9978},
+{'2020-06':0.9965},
+{'2020-07':1.0057},
+{'2020-08':1.0038},
+{'2020-09':1.01},
+{'2020-10':1.011},
+{'2020-11':1.0101},
+{'2020-12':1.0218},
+{'2021-01':1.0029},
+{'2021-02':1.0083},
+{'2021-03':1.007},
+{'2021-04':1.0043},
+{'2021-05':1.011},
+{'2021-06':1.003},
+{'2021-07':1.0094},
+{'2021-08':1.0082},
+{'2021-09':1.0101},
+{'2021-10':1.0138},
+{'2021-11':1.0073},
+{'2021-12':1.0094},
+{'2022-01':1.0054},
+{'2022-02':1.0133},
+{'2022-03':1.0206},
+{'2022-04':1.0103},
+{'2022-05':1.0028},
+{'2022-06':1.0051},
+{'2022-07':0.9937},
+{'2022-08':0.9893},
+{'2022-09':0.9985},
+{'2022-10':1.0071},
+{'2022-11':1.0036},
+{'2022-12':1.01},
+{'2023-01':0.9999},
+{'2023-02':1.0065},
+{'2023-03':1.0073},
+{'2023-04':1.0053},
+{'2023-05':0.9962},
+{'2023-06':0.9938},
+{'2023-07':1.0005},
+{'2023-08':1.0043},
+{'2023-09':1.005},
+{'2023-10':0.9977},
+{'2023-11':0.9961},
+{'2023-12':1.0043},
+{'2024-01':1.0106},
+{'2024-02':1.0106},
+{'2024-03':1.0081}]
+
+    function calcular(){
+        var numero = document.getElementById("valor").value.toString()
+        if(numero!=""){
+        var x= numero.substring(3).replaceAll(".","")
+        var x= x.replaceAll(",",".")
+        var valor = parseFloat(x);
+        var inicio=document.getElementById("data").value
+        var fim=document.getElementById("data2").value
+        let anuncio=false
+        if(inicio<'2020-01'){document.getElementById('data').value='2020-01';if(anuncio==false){alert('Esta série só possui dados de 2020-01 até 2024-03');anuncio=true}}
+        if(fim>'2024-03'){document.getElementById('data2').value='2024-03';if(anuncio==false){alert('Esta série só possui dados de 2020-01 até 2024-03');anuncio=true}}
+        if(inicio<fim){
+        var valores=[]
+        inflatio.map(function(nome, i) {if(Object.keys(nome)[0]>=inicio && Object.keys(nome)[0]<=fim){valores.push(Object.values(nome)[0]);}});
+        console.log(valores)
+	  let inflatioAcum=1
+        valores.forEach((a)=>console.log((inflatioAcum*=a).toFixed(4)));
+        var resultado = valor * inflatioAcum; 
+        document.getElementById("resultado").innerHTML = "Valor reajustado: R$" + resultado.toFixed(2).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });}
+        else{document.getElementById("resultado").innerHTML ="A data de inicio deve ser anterior à data final. "}
+        }else{document.getElementById("resultado").innerHTML ="Insira o valor a ser reajustado."}
+    }
+
+    function formatCurrency(input) {
+        // Obtém o valor atual do input
+        let value = input.value;
+        // Remove tudo que não for um número
+        value = value.replace(/\D/g, '');
+        // Divide o valor por 100 para obter o valor em reais
+        value = Number(value) / 100;
+        // Formata o valor para o formato de moeda brasileira
+        value = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        // Atualiza o valor do input com o valor formatado
+        input.value = value;
+    }
+
+</script>
+<style>
+	
+.topnav {
+  background-color: #333;
+  overflow: hidden;
+  position:relative:
+  top:-5px;
+  left:-5px;
+
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+/* Add a color to the active/current link */
+.topnav a.active {
+  background-color: #04AA6D;
+  color: white;
+}
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #090c4c;
+    }
+
+    .container {
+        margin: 10px auto;
+        max-width: 400px;
+        background-color: #fff;
+        padding: 60px 50px 10px 50px;
+        box-shadow: 0px 2px 5px rgba(107, 103, 103, 0.3);
+        border-radius: 5px;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 30px;
+        margin: 0 0 20px 0;
+    }
+
+    label {
+        font-size: 20px;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    input[type="text"] {
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 15px;
+    }
+
+    button {
+        background-color: #008CBA;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 20px;
+        
+    }
+
+    button:hover {
+        background-color: #00698C;
+    }
+
+    .result {
+        padding: 20px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+        font-size: 28px;
+        font-weight: bold;
+        margin-top: 30px;
+    }
+    .input-label {
+display: block;
+font-weight: bold;
+margin-bottom: 10px;
+}
+
+.input-date {
+padding: 10px;
+border-radius: 5px;
+border: 1px solid #ccc;
+font-size: 12px;
+width:40%;
+}
+#second{
+position:relative;
+top:-65px;
+left:205px;
+}
+#button_1{
+    top:-30px;
+}
+</style>
